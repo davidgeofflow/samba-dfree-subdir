@@ -1,0 +1,51 @@
+#!/bin/bash
+
+recursive=false
+
+# Check if the directory is provided
+if [ -z "$1" ]; then
+    exit 1
+fi
+directory=$1
+
+# Initialise totals
+total_space=0
+free_space=0
+
+# Get the filesystem of the provided directory, suppress errors if directory does not exist
+main_fs=$(df -P "$directory" 2>/dev/null | tail -1 | awk '{print $1}')
+if [ -z "$main_fs" ]; then
+    exit 1
+fi
+
+# Process the main directory, suppress errors if directory does not exist
+main_stats=($(df -P "$directory" 2>/dev/null | tail -1 | awk '{print $2, $4}'))
+if [ ${#main_stats[@]} -ge 2 ] && [[ "${main_stats[0]}" =~ ^[0-9]+$ ]] && [[ "${main_stats[1]}" =~ ^[0-9]+$ ]]; then
+    total_space=$((total_space + main_stats[0]))
+    free_space=$((free_space + main_stats[1]))
+else
+    # Exit if unable to retrieve valid disk space information
+    exit 1
+fi
+
+# Find subdirectories based on the recursive flag, suppress errors if directories are inaccessible
+if $recursive; then
+    subdirs=$(find "$directory" -type d 2>/dev/null)
+else
+    subdirs=$(find "$directory" -mindepth 1 -maxdepth 1 -type d 2>/dev/null)
+fi
+
+# Check subdirectories for different mount points, suppress errors for inaccessible directories
+while IFS= read -r subdir; do
+    sub_fs=$(df -P "$subdir" 2>/dev/null | tail -1 | awk '{print $1}')
+    if [ "$sub_fs" != "$main_fs" ]; then
+        sub_stats=($(df -P "$subdir" 2>/dev/null | tail -1 | awk '{print $2, $4}'))
+        if [ ${#sub_stats[@]} -ge 2 ] && [[ "${sub_stats[0]}" =~ ^[0-9]+$ ]] && [[ "${sub_stats[1]}" =~ ^[0-9]+$ ]]; then
+            total_space=$((total_space + sub_stats[0]))
+            free_space=$((free_space + sub_stats[1]))
+        fi
+    fi
+done <<< "$subdirs"
+
+# Output the results
+echo "$total_space $free_space"
