@@ -4,7 +4,7 @@
 The Samba daemon does not report all available disk space when the path contains multiple disks.
 
 ## Solution:
-This script calculates and outputs the correct total and free space for a given directory, including subdirectories on different mount points. By default, it checks the top-level directories, but it can be modified to include subdirectories by setting the `recursive` variable to `true`.
+This script calculates and outputs the correct total and free space for a given directory, including subdirectories on different mount points. By default, it checks the first level of subdirectories, but it can be modified to include all subdirectories by setting the `recursive` variable to `true`.
 
 ## Setup Instructions:
 
