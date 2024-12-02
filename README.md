@@ -8,13 +8,9 @@ This script calculates and outputs the correct total and free space for a given 
 
 ## Setup Instructions:
 
-1. **Modify the script for recursive checks (optional):**
+1. **Modify the script for recursive checks (optional)**
 
     By default, the script checks only the top-level directories. If you want it to include subdirectories, set the `recursive` variable to `true` within the script:
-
-    ```bash
-    recursive=true
-    ```
 
 2. **Copy the script to a directory**
 
