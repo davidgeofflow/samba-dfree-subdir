@@ -8,23 +8,19 @@ This script calculates and outputs the correct total and free space for a given 
 
 ## Setup Instructions:
 
-1. **Modify the script for recursive checks (optional)**
-
-    By default, the script checks only the top-level directories. If you want it to include subdirectories, set the `recursive` variable to `true` within the script:
-
-2. **Copy the script to a directory**
+1. **Copy the script to a directory**
 
     ```bash
     sudo cp samba-dfree-subdir /usr/local/bin/samba-dfree-subdir
     ```
 
-3. **Make the script executable**
+2. **Make the script executable**
 
     ```bash
     sudo chmod +x /usr/local/bin/samba-dfree-subdir
     ```
 
-4. **Configure Samba**
+3. **Configure Samba**
 
     Edit your `smb.conf` and add the following line:
 
